@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sjxie.Server.Dao.resourceDao">
+	<resultMap id="BaseResultMap"
+		type="com.sjxie.entity.resource">
+		<id column="resource_id" property="resource_id" jdbcType="VARCHAR" />
+		<result column="resource_name" property="resource_name"
+			jdbcType="VARCHAR" />
+		<result column="resource_dec" property="resource_dec"
+			jdbcType="VARCHAR" />
+		<result column="resource_type" property="resource_type"
+			jdbcType="VARCHAR" />
+		<result column="resource_price" property="resource_price"
+			jdbcType="VARCHAR" />
+		<result column="resource_img" property="resource_img"
+			jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="getResourceList" parameterType="java.lang.String"
+		resultType="com.sjxie.entity.resource">
+		SELECT * FROM resource WHERE resource_type = #{resource_type}
+	</select>
+
+	<select id="getAllResourceList"	resultType="com.sjxie.entity.resource">
+		SELECT * FROM resource
+	</select>
+	
+	<select id="countResource" resultType="java.lang.Integer">
+		select count(*) from resource
+	</select>
+
+	<select id="countResourceByType"
+		parameterType="java.lang.String" resultType="java.lang.Integer">
+		select count(*) from
+		resource WHERE resource_type = #{resource_type}
+	</select>
+
+	<delete id="deleteResourceById" parameterType="java.lang.String">
+		delete from
+		resource where resource_id = #{resource_id}
+	</delete>
+
+	<insert id="addResource" parameterType="com.sjxie.entity.resource">
+		insert into resource (resource_id, resource_name, resource_dec,
+		resource_type, resource_price, resource_img,resource_specification,resource_inventory)
+		values (#{resource_id,jdbcType=VARCHAR}, #{resource_name,jdbcType=VARCHAR},
+		#{resource_dec,jdbcType=VARCHAR},
+		#{resource_type,jdbcType=VARCHAR}, #{resource_price,jdbcType=VARCHAR}, #{resource_img,jdbcType=VARCHAR},#{resource_specification,jdbcType=VARCHAR},#{resource_inventory,jdbcType=INTEGER})
+	</insert>
+	<insert id="addCart" parameterType="com.sjxie.entity.cart">
+		insert into cart (resource_id, user_id, status,
+		counts, resource_type_id, resource_type_name,resource_dec,resource_price)
+		values (#{resource_id,jdbcType=VARCHAR}, #{user_id,jdbcType=VARCHAR},
+		#{status,jdbcType=INTEGER},#{counts,jdbcType=INTEGER}, #{resource_type_id,jdbcType=VARCHAR},
+		#{resource_type_name,jdbcType=VARCHAR},#{resource_dec,jdbcType=VARCHAR},#{resource_price,jdbcType=VARCHAR})
+	</insert>
+	<select id="getMyResourceByStatus" parameterType="java.util.Map" resultType="com.sjxie.vo.resourceCarVo">
+		select r.resource_id,r.resource_name,r.resource_dec,r.resource_type,r.resource_price,r.resource_img,c.counts from resource as r inner join cart as c on r.resource_id =
+		c.resource_id and c.user_id = #{user_id,jdbcType=VARCHAR} and c.status = #{status,jdbcType=INTEGER}
+	</select>
+	<select id="getResourceByResourceId" parameterType="java.lang.String" resultType="com.sjxie.entity.resource">
+		select * from resource where resource_id = #{resource_id}
+	</select>
+	<select id="getResourceByResourceLikeName" parameterType="java.lang.String" resultType="com.sjxie.entity.resource">
+		select * from resource where resource_name like "%"#{resourceName}"%"
+	</select>
+</mapper>

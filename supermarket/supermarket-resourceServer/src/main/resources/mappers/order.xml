@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sjxie.Server.Dao.orderDao">
+
+	<select id="getOrderListByUser" parameterType="java.lang.String" resultType="com.sjxie.vo.orderVo">
+		select r.resource_id,r.resource_name,r.resource_dec,r.resource_type,r.resource_price,r.resource_img,c.order_count from resource as r inner join orders as c on r.resource_id =
+		c.order_resource_id and c.order_user_id = #{user_id,jdbcType=VARCHAR}
+	</select>
+	
+	<insert id="addOrder" parameterType="com.sjxie.entity.order">
+		insert into orders (id, order_resource_id, order_user_id,
+		order_price, order_time, order_province,order_city,order_county,order_adress,order_status,order_count,order_discounts_id,order_user_phone)
+		values (#{id,jdbcType=VARCHAR}, #{order_resource_id,jdbcType=VARCHAR},
+		#{order_user_id,jdbcType=VARCHAR},#{order_price,jdbcType=VARCHAR}, 
+		#{order_time,jdbcType=TIMESTAMP}, #{order_province,jdbcType=VARCHAR},
+		#{order_city,jdbcType=VARCHAR},#{order_county,jdbcType=VARCHAR},#{order_adress,jdbcType=VARCHAR},#{order_status,jdbcType=INTEGER},#{order_count,jdbcType=INTEGER},#{order_discounts_id,jdbcType=VARCHAR},#{order_user_phone,jdbcType=VARCHAR})
+	</insert>
+	
+	<select id="getOrderCountByUserId" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select count(order_resource_id) from orders where order_user_id = #{order_user_id}
+	</select>
+	
+	<select id="getOrderListByUserAndStatus" parameterType="java.util.Map" resultType="com.sjxie.vo.orderVo">
+		select r.resource_id,r.resource_name,r.resource_dec,r.resource_type,r.resource_price,r.resource_img,c.order_count from resource as r inner join orders as c on r.resource_id =
+		c.order_resource_id and c.order_user_id = #{user_id,jdbcType=VARCHAR} and c.order_status = #{order_status,jdbcType=INTEGER}
+	</select>
+	<select id="getOrderCountByUserIdAndStatus" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(*) from
+		orders WHERE order_user_id = #{user_id} and order_status = #{order_status}
+	</select>
+	<select id="getOrderCountByStatus" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		select count(*) from
+		orders WHERE order_status = #{status}
+	</select>
+	<update id="updateOrderStatus" parameterType="java.util.Map">
+		update orders set order_status = #{resource_status} where order_user_id = #{user_id} and order_resource_id = #{resource_id}
+	</update>
+	<update id="updateCartStatus" parameterType="java.util.Map">
+		update cart set status = #{resource_status} where user_id = #{user_id} and resource_id = #{resource_id}
+	</update>
+	<delete id="deleteOrderById" parameterType="java.lang.String">
+		delete from orders where order_resource_id = #{resource_id}
+	</delete>
+	<delete id="deleteCartById" parameterType="java.lang.String">
+		delete from cart where resource_id = #{resource_id}
+	</delete>
+	<select id="getOrdersByStatus" parameterType="java.lang.Integer" resultType="com.sjxie.vo.orderVo">
+		select r.resource_id,r.resource_name,r.resource_dec,r.resource_type,r.resource_price,r.resource_img,c.order_count from resource as r inner join orders as c on r.resource_id =
+		c.order_resource_id and c.order_status = #{status,jdbcType=INTEGER}
+	</select>
+</mapper>

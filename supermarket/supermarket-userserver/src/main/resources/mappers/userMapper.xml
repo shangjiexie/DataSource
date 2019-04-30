@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sjxie.Server.Dao.userDao">
+	<resultMap id="BaseResultMap" type="com.sjxie.entity.user">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="age" property="age" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="getUser" parameterType="java.lang.String"
+		resultType="com.sjxie.entity.user">
+		SELECT * FROM user WHERE user_id = #{user_id}
+	</select>
+	<select id="getUserList" resultType="com.sjxie.entity.user">
+		SELECT * FROM user
+	</select>
+	<select id="login" parameterType="java.lang.String"
+		resultType="com.sjxie.entity.user">
+		SELECT * FROM user WHERE user_name = #{arg0} and user_password = #{arg1}
+	</select>
+	<insert id="registerUser" parameterType="com.sjxie.entity.user">
+		INSERT INTO user
+		(user_id, user_name, user_email, user_phone, user_password)
+		VALUES(
+		#{arg0,jdbcType=VARCHAR},#{arg1,jdbcType=VARCHAR},#{arg2,jdbcType=VARCHAR},#{arg3,jdbcType=VARCHAR},
+		#{arg4,jdbcType=VARCHAR}
+		)
+	</insert>
+	<update id="updateMyInfo">
+		update user set user_name = #{user_name},user_sex = #{user_sex},user_age =
+		#{user_age},user_email = #{user_email},user_password = #{user_password} , user_adress =
+		#{user_adress},user_phone = #{user_phone} where user_id = #{user_id}
+	</update>
+	<select id="getUserByUserName" parameterType="java.lang.String"
+		resultType="com.sjxie.entity.user">
+		SELECT * FROM user WHERE user_name = #{user_name}
+	</select>
+	<update id="updateUserType">
+		update user set user_type = #{user_type} where user_id = #{user_id}
+	</update>
+</mapper>
